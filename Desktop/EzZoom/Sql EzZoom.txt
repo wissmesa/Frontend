@@ -1,0 +1,148 @@
+
+
+
+
+/////////Roles/////
+
+
+create table Roles (
+rol_id serial constraint rol_id primary key,
+rol varchar(30) not null,
+description varchar(150) not null
+
+);
+
+
+////////////types///////////////
+
+
+create table types(
+types_id serial constraint types_id primary key,
+type varchar (50) not null,
+description varchar(150) not null,
+category varchar(50) not null
+
+);
+
+///////Permissions_Roles/////////// 
+
+create table Permissions_Roles(
+permissions_rol_id serial  primary key,
+rol_id integer not null,
+constraint rol_id_fk foreign key (rol_id) references Roles(rol_id)
+	
+);
+
+
+
+////Permissions////////
+
+
+create table Permissions(
+permissions_id serial primary key,
+permission varchar(50) not null,
+description varchar(150) not null
+
+);
+
+//// Modules//////
+
+create table Modules (
+module_id serial primary key,
+module varchar(50) not null,
+description varchar (150) not null
+
+);
+
+/////Settings////////
+
+create table Settings(
+setting_id serial primary key,
+meeting_id integer not null,
+passcode integer not null,
+URL_meeting varchar(150) not null,
+eZzoom_callnumber integer not null
+	
+);
+
+
+/////// Services////////
+Create table Services(
+service_id serial primary key,
+service_name varchar(50) not null,
+value integer not null
+
+);
+
+
+//////Local Numbers/////////
+
+create table Local_Numbers(
+local_number_id serial primary key,
+local_number integer not null,
+setting_id integer not null,
+constraint id_settings foreign key(setting_id) references Settings(setting_id)
+
+);
+
+
+/////////User/////////
+create table Users (
+customer_id serial primary key,
+name varchar(100) not null,
+last_name varchar(100) not null,
+email varchar(100) not null,
+username varchar(20) not null,
+password varchar (250) not null,
+creation date  not null, 
+rol_id integer not null,
+setting_id integer,
+status_id integer not null,
+constraint id_rol foreign key (rol_id) references Roles (rol_id),
+constraint id_setting foreign key (setting_id) references Settings (setting_id),
+constraint id_status foreign key (status_id) references types (types_id)		
+	
+)
+
+
+/////////// alter Permissions_Roles ////////////
+
+ALTER TABLE Permissions_Roles ADD Permissions_Roles integer NOT NULL;
+alter table Permissions_Roles ADD CONSTRAINT fk_permission_id FOREIGN KEY (permission_id) references permissions(permissions_id);
+
+/////////// alter Permissions ////////////
+
+Alter table permissions ADD module_id integer not null;
+alter table Permissions ADD CONSTRAINT fk_module_id FOREIGN KEY (module_id) references modules(module_id);
+Alter table permissions ADD status_id integer not null;
+alter table Permissions ADD CONSTRAINT fk_types FOREIGN KEY (status_id) references types(types_id);
+
+/////////// alter Modules ////////////
+
+Alter table modules ADD status_id integer not null;
+alter table modules ADD CONSTRAINT fk_types FOREIGN KEY (status_id) references types
+(types_id);
+
+/////////// alter Settings////////////
+Alter table settings ADD status_id integer not null;
+alter table settings ADD CONSTRAINT fk_types FOREIGN KEY (status_id) references types
+(types_id);
+Alter table settings ADD service_id integer not null;
+alter table settings ADD CONSTRAINT fk_services FOREIGN KEY (service_id) references services
+(service_id);
+
+
+////////////// alter services ////////////
+Alter table services ADD status_id integer not null;
+alter table services ADD CONSTRAINT fk_types FOREIGN KEY (status_id) references types
+(types_id);
+Alter table services ADD type_id integer not null;
+alter table services ADD CONSTRAINT fk_types_services FOREIGN KEY (type_id) references types
+(types_id);
+
+////////////// Local numbers ////////////
+Alter table local_numbers ADD status_id integer not null;
+alter table local_numbers ADD CONSTRAINT fk_types FOREIGN KEY (status_id) references types
+(types_id);
+
+
